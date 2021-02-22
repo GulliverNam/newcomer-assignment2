@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Main Page</title>
+		<style type="text/css">
+			div {
+		        width: 100%;
+		        height: 500px;
+		        border: 1px solid #000;
+		        padding: 10px;
+		    }
+		    div.input {
+		        width: 50%;
+		        float: left;
+		        box-sizing: border-box;
+		    }
+		    div.output {
+		        width: 50%;
+		        float: right;
+		        box-sizing: border-box;
+		    }
+		    textarea {
+		    	width: 100%;
+		    	height: 60%;
+		    }
+		</style>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$("button").on("click", function() {
+					var data = $(".input_area").val().trim();
+					if(data.slice(0,1) == "<" && data.slice(-1) == ">"){
+						alert("xml");
+						$.ajax({
+							type: "POST",
+							url: "/stock/main",
+							data: data,
+							contentType:"text/xml",
+							success: function(){
+								alert("success xml");
+							}
+						});
+					} else if(data.slice(0,1) == "{" && data.slice(-1) == "}"){
+						alert("json");
+						$.ajax({
+							type: "POST",
+							url: "/stock/main",
+							data: JSON.stringify(data),
+							contentType:"application/json",
+							success: function(){
+								alert("success json");
+							}
+						});
+					} else {
+						alert("Wrong Format");
+					}
+					
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="input">
+			<h1>Input</h1>
+			<textarea class="input_area"></textarea>
+			<button type="submit">전송</button>
+		</div>
+		<div class="output">
+			<h1>Output</h1>
+			<textarea class="output_area"></textarea>
+		</div>
+	</body>
+</html>
