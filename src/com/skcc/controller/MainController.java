@@ -44,11 +44,13 @@ public class MainController extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if("POST".equalsIgnoreCase(request.getMethod())){
+			
 			try {
 				ConnectionUtils.ignoreSSL();
 			} catch (KeyManagementException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
+			
 			request.setCharacterEncoding("utf-8");
 			response.setContentType("application/x-json;charset=UTF-8");
 			
@@ -62,10 +64,10 @@ public class MainController extends HttpServlet {
 			codeMap.put("mks", "시가총액_억");
 			codeMap.put("aa", "거래대금_백만");
 			
-			
 			PrintWriter out = response.getWriter();
 			String contentType = ServletUtils.getContentType(request);
 			String data = ServletUtils.getData(request);
+			
 			if("json".equals(contentType)) {
 				JsonNode json = JsonUtils.getStockInfo(data, codeMap);
 				out.print(json.toPrettyString());
