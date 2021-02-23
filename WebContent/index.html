@@ -36,9 +36,15 @@
 							type: "POST",
 							url: "/stock/main",
 							data: data,
-							contentType:"text/xml",
-							success: function(){
+							contentType: "text/xml",
+							dataType: "xml",
+							success: function(data){
 								alert("success xml");
+								$(".output_area").val(new XMLSerializer().serializeToString(data.documentElement));
+
+							},
+							error: function(){
+								alert("error xml")
 							}
 						});
 					} else if(data.slice(0,1) == "{" && data.slice(-1) == "}"){
@@ -46,10 +52,16 @@
 						$.ajax({
 							type: "POST",
 							url: "/stock/main",
-							data: JSON.stringify(data),
-							contentType:"application/json",
-							success: function(){
+							data: data,
+							contentType: "application/json",
+							dataType: "json",
+							success: function(data){
 								alert("success json");
+								console.log(data);
+								$(".output_area").val(JSON.stringify(data, null, 4));
+							},
+							error: function(){
+								alert("error json")
 							}
 						});
 					} else {
@@ -64,7 +76,7 @@
 		<div class="input">
 			<h1>Input</h1>
 			<textarea class="input_area"></textarea>
-			<button type="submit">전송</button>
+			<button style="float: right;" type="submit">전송</button>
 		</div>
 		<div class="output">
 			<h1>Output</h1>

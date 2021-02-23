@@ -1,6 +1,7 @@
 package com.skcc.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -12,9 +13,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import com.skcc.util.ConnectionUtils;
+import com.skcc.util.JsonUtils;
 import com.skcc.util.ServletUtils;
+import com.skcc.util.XmlUtils;
 
 
 @WebServlet("/main")
@@ -36,7 +44,8 @@ public class MainController extends HttpServlet {
 			} catch (KeyManagementException | NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
-			
+			request.setCharacterEncoding("utf-8");
+	        
 			HashMap<String, String> codeMap = new HashMap<>();
 			codeMap.put("cd", "종목코드");
 			codeMap.put("nm", "종목명");
@@ -47,23 +56,23 @@ public class MainController extends HttpServlet {
 			codeMap.put("mks", "시가총액_억");
 			codeMap.put("aa", "거래대금_백만");
 			
+			response.setContentType("application/x-json;charset=UTF-8");
+			PrintWriter out = response.getWriter();
 			String contentType = ServletUtils.getContentType(request);
 			String data = ServletUtils.getData(request);
-			System.out.println(new ObjectMapper().readTree(data));
-//			if("json".equals(contentType)) {
-//				JsonNode json = JsonUtils.getStockInfo(data, codeMap);
-//				System.out.println(json.toPrettyString());
-//			} else if("xml".equals(contentType)) {
-//				Document xml = null;
-//				try {
-//					xml = XmlUtils.getStockInfo(data, codeMap);
-//					new XMLOutputter(Format.getPrettyFormat()).output(xml, System.out);
-//				} catch (JDOMException | IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
-			
-			
+			if("json".equals(contentType)) {
+				JsonNode json = JsonUtils.getStockInfo(data, codeMap);
+				out.print(json.toPrettyString());
+			} else if("xml".equals(contentType)) {
+				Document xml = null;
+				try {
+					xml = XmlUtils.getStockInfo(data, codeMap);
+					out.print(new XMLOutputter(Format.getPrettyFormat()).outputString(xml));
+					
+				} catch (JDOMException | IOException e) {
+					e.printStackTrace();
+				}
+			}
 		} else {
 			System.out.println("Wrong Method");
 		}
