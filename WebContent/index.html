@@ -31,7 +31,6 @@
 				$("button").on("click", function() {
 					var data = $(".input_area").val().trim();
 					if(data.slice(0,1) == "<" && data.slice(-1) == ">"){
-						alert("xml");
 						$.ajax({
 							type: "POST",
 							url: "/stock/main",
@@ -39,7 +38,7 @@
 							contentType: "text/xml",
 							dataType: "xml",
 							success: function(data){
-								alert("success xml");
+								alert("ajax success xml");
 								$(".output_area").val(new XMLSerializer().serializeToString(data.documentElement));
 
 							},
@@ -48,7 +47,6 @@
 							}
 						});
 					} else if(data.slice(0,1) == "{" && data.slice(-1) == "}"){
-						alert("json");
 						$.ajax({
 							type: "POST",
 							url: "/stock/main",
@@ -56,12 +54,12 @@
 							contentType: "application/json",
 							dataType: "json",
 							success: function(data){
-								alert("success json");
+								alert("ajax success json");
 								console.log(data);
 								$(".output_area").val(JSON.stringify(data, null, 4));
 							},
-							error: function(){
-								alert("error json")
+							error: function(err){
+								alert("error json"+err)
 							}
 						});
 					} else {
@@ -75,12 +73,12 @@
 	<body>
 		<div class="input">
 			<h1>Input</h1>
-			<textarea class="input_area"></textarea>
+			<textarea class="input_area" wrap="off"></textarea>
 			<button style="float: right;" type="submit">전송</button>
 		</div>
 		<div class="output">
 			<h1>Output</h1>
-			<textarea class="output_area"></textarea>
+			<textarea class="output_area" wrap="off"></textarea>
 		</div>
 	</body>
 </html>

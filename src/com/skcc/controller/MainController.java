@@ -36,7 +36,12 @@ public class MainController extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		
 	}
-
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String contextPath = request.getContextPath();
+		response.sendRedirect(contextPath+"/index.html");
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if("POST".equalsIgnoreCase(request.getMethod())){
 			try {
@@ -45,7 +50,8 @@ public class MainController extends HttpServlet {
 				e.printStackTrace();
 			}
 			request.setCharacterEncoding("utf-8");
-	        
+			response.setContentType("application/x-json;charset=UTF-8");
+			
 			HashMap<String, String> codeMap = new HashMap<>();
 			codeMap.put("cd", "종목코드");
 			codeMap.put("nm", "종목명");
@@ -56,7 +62,7 @@ public class MainController extends HttpServlet {
 			codeMap.put("mks", "시가총액_억");
 			codeMap.put("aa", "거래대금_백만");
 			
-			response.setContentType("application/x-json;charset=UTF-8");
+			
 			PrintWriter out = response.getWriter();
 			String contentType = ServletUtils.getContentType(request);
 			String data = ServletUtils.getData(request);

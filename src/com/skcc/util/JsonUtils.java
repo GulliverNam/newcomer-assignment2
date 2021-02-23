@@ -53,6 +53,7 @@ public class JsonUtils {
 		
 		for(JsonNode item : items) {
 		    JsonNode stockInfo = getResponse(item.get("item").toString().replaceAll("\"", ""));
+		    ((ObjectNode)item).remove("item");
 		    for(String key:codeMap.keySet()) {
 		    	((ObjectNode)item).put(codeMap.get(key), stockInfo.get(key).toString().replaceAll("\"", ""));
 		    }

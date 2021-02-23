@@ -23,10 +23,12 @@ public class XmlUtils {
 		
 		for(Element item : xmlInput) {
 	        JsonNode stockInfo = JsonUtils.getResponse(item.getAttributeValue("code"));
-	        for(String key:codeMap.keySet()) {
+	        item.removeAttribute("code");
+	        for(String key : codeMap.keySet()) {
 	        	item.setAttribute(codeMap.get(key), stockInfo.get(key).toString().replaceAll("\"", ""));
 	        }
 		}
+		
 		return xml;
 	}
 
