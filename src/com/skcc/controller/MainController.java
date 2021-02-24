@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -51,32 +50,20 @@ public class MainController extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-			request.setCharacterEncoding("utf-8");
-			response.setContentType("application/x-json;charset=UTF-8");
-			
-			HashMap<String, String> codeMap = new HashMap<>();
-			codeMap.put("cd", "종목코드");
-			codeMap.put("nm", "종목명");
-			codeMap.put("nv", "현재가");
-			codeMap.put("cv", "전일비");
-			codeMap.put("cr", "등락률");
-			codeMap.put("rf", "rf");
-			codeMap.put("mks", "시가총액_억");
-			codeMap.put("aa", "거래대금_백만");
+			ServletUtils.setReqRes(request, response);
 			
 			PrintWriter out = response.getWriter();
 			String contentType = ServletUtils.getContentType(request);
 			String data = ServletUtils.getData(request);
 			
 			if("json".equals(contentType)) {
-				JsonNode json = JsonUtils.getStockInfo(data, codeMap);
+				JsonNode json = JsonUtils.getStockInfo(data);
 				out.print(json.toPrettyString());
 			} else if("xml".equals(contentType)) {
 				Document xml = null;
 				try {
-					xml = XmlUtils.getStockInfo(data, codeMap);
+					xml = XmlUtils.getStockInfo(data);
 					out.print(new XMLOutputter(Format.getPrettyFormat()).outputString(xml));
-					
 				} catch (JDOMException | IOException e) {
 					e.printStackTrace();
 				}

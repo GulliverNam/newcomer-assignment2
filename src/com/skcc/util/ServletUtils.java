@@ -2,10 +2,12 @@ package com.skcc.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class ServletUtils {
 
@@ -25,6 +27,11 @@ public class ServletUtils {
 		String data = lines.collect(Collectors.joining(System.lineSeparator()));
 		if(data == null) return null;
 		return data;
+	}
+
+	public static void setReqRes(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+		request.setCharacterEncoding("utf-8");
+		response.setContentType("application/x-json;charset=UTF-8");
 	}
 
 }
